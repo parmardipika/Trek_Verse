@@ -102,20 +102,20 @@ TrekVerse/
 
 ## 🛠️ Installation & Usage
 
-<br>```bash
-# Clone the repo
-git clone https://github.com/parmardipika/trek-verse.git
-cd trek-verse
+<br>```
+### Clone the repo
+git clone https://github.com/parmardipika/trek-verse.git <br>
+cd trek-verse <br>
 
-# Setup server
-cd server
-npm install
-npm run dev
+### Setup server
+cd server <br>
+npm install <br>
+npm run dev <br>
 
-# Setup client
-cd ../client
-npm install
-npm start
+### Setup client
+cd ../client <br>
+npm install <br>
+npm start<br>
 
 <br>```
 ---
