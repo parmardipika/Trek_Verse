@@ -4,11 +4,6 @@
 
 Whether you're planning a peaceful getaway or an adventure-rich journey, Trek Verse connects you with stunning homes, cottages, and apartments worldwide — now enhanced with virtual previews and intelligent personalization.
 
-<div align="center">
-  <img src="https://your-preview-image-url.com/trekverse-preview.png" alt="Trek Verse Preview" style="border-radius: 12px; max-width: 100%;">
-</div>
-
-
 ---
 
 ## 🚀 Vision
@@ -108,29 +103,29 @@ TrekVerse/
 ## 🛠️ Installation & Usage
 
 
-# Clone the repo
+### Clone the repo
 git clone https://github.com/yourusername/trek-verse.git
 cd trek-verse
 
-# Setup server
+### Setup server
 cd server
 npm install
 npm run dev
 
-# Setup client
+### Setup client
 cd ../client
 npm install
 npm start
 
 ---
 
-## 📌 Status
+### 📌 Status
 Trek Verse is currently under active development. We're building toward a complete immersive, intelligent, and secure travel platform. Stay tuned for major AR/VR releases!
 
-## 🙌 Contributing
+### 🙌 Contributing
 Feel free to fork, raise issues, or suggest features. Let’s build something awesome together!
 
-## 🌐 Live Demo
+### 🌐 Live Demo
 Coming Soon — stay tuned!
 
 ## 🙋‍♀️ Author
