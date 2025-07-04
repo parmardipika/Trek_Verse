@@ -102,21 +102,22 @@ TrekVerse/
 
 ## 🛠️ Installation & Usage
 
-
-### Clone the repo
-git clone https://github.com/yourusername/trek-verse.git
+<br>```bash
+# Clone the repo
+git clone https://github.com/parmardipika/trek-verse.git
 cd trek-verse
 
-### Setup server
+# Setup server
 cd server
 npm install
 npm run dev
 
-### Setup client
+# Setup client
 cd ../client
 npm install
 npm start
 
+<br>```
 ---
 
 ### 📌 Status
