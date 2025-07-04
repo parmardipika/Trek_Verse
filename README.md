@@ -102,7 +102,7 @@ TrekVerse/
 
 ## 🛠️ Installation & Usage
 
-<br>```
+<br>
 ### Clone the repo
 git clone https://github.com/parmardipika/trek-verse.git <br>
 cd trek-verse <br>
@@ -117,7 +117,7 @@ cd ../client <br>
 npm install <br>
 npm start<br>
 
-<br>```
+
 ---
 
 ### 📌 Status
