@@ -3,12 +3,12 @@
 }
      */
 .navbar {
-  height: 5px;
+  height: 5rem;
+  background-color: white;
 }
 
-fa-compass {
+.fa-compass {
   color: #fe424d;
-
   font-size: 2rem;
 }
 .nav-link {
