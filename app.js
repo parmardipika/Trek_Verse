@@ -47,6 +47,7 @@ app.get("/listings/new", (req, res) => {
 app.get("/listings/:id", async (req, res) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
+  console.log("Listing Data:", listing); 
   res.render("listings/show.ejs", { listing });
 });
 
