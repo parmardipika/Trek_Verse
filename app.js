@@ -8,6 +8,7 @@ const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js")
 const {listingSchema}=require("./schema.js");
+const Review= require("./models/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -30,9 +31,24 @@ app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 
+
+app.use((req, res, next) => {
+  console.log("📦 Request body:", req.body);
+  next();
+});
+
+app.use((req, res, next) => {
+  console.log("🟡 Incoming body:", req.body);
+  next();
+});
+
+
+
 app.get("/", (req, res) => {
   res.send("Hi, I am root");
 });
+
+
 
 const validateListing=(req,res,next)=>{
 let {error} = listingSchema.validate(req.body);
@@ -44,6 +60,7 @@ throw new ExpressError(400,errMsg);
     next();
   }
 }
+
 
 //Index Route
 app.get("/listings", wrapAsync(async (req, res) => {
@@ -60,8 +77,12 @@ app.get("/listings/new", (req, res) => {
 //Show Route
 app.get("/listings/:id", wrapAsync(async (req, res) => {
   let { id } = req.params;
-  const listing = await Listing.findById(id);
-  console.log("Listing Data:", listing); 
+  const listing = await Listing.findById(id).populate("reviews");
+   if (!listing) {
+    return next(new ExpressError(404, "Listing not found!"));
+  }
+
+  // console.log("Listing Data:", listing); 
   res.render("listings/show.ejs", { listing });
 }));
 
@@ -120,6 +141,38 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 //   console.log("sample was saved");
 //   res.send("successful testing");
 // });
+//reviews
+//post route
+app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
+  console.log("🔥 Review form submitted!", req.body);
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+
+  if (!listing) {
+    throw new ExpressError(404, "Listing not found");
+  }
+
+  // Basic validation check
+  const { rating, comment } = req.body.review || {};
+
+  if (!rating || !comment) {
+    throw new ExpressError(400, "Review must have both rating and comment.");
+  }
+
+  const newReview = new Review({ rating, comment });
+  await newReview.save();
+
+  // 💡 Push only ObjectId into reviews array
+  listing.reviews.push(newReview._id);
+  await listing.save();
+
+  console.log("✅ New review saved:", newReview);
+  res.redirect(`/listings/${listing._id}`);
+}));
+
+
+
+
 
 app.use((req,res,next )=>{
   next(new ExpressError(404,"Page Not Found!"));
