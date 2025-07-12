@@ -143,7 +143,9 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 // });
 //reviews
 //post route
+
 app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
+
   console.log("🔥 Review form submitted!", req.body);
   const { id } = req.params;
   const listing = await Listing.findById(id);
@@ -175,6 +177,7 @@ app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
 
 
 app.use((req,res,next )=>{
+    console.log("❌ Page not found:", req.originalUrl); // Add this
   next(new ExpressError(404,"Page Not Found!"));
 });
 
