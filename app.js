@@ -173,9 +173,6 @@ app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
 }));
 
 
-
-
-
 app.use((req,res,next )=>{
     console.log("❌ Page not found:", req.originalUrl); // Add this
   next(new ExpressError(404,"Page Not Found!"));
