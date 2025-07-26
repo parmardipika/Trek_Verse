@@ -7,7 +7,7 @@ const methodOverride = require("method-override");
 const ejsMate=require("ejs-mate");
 const wrapAsync=require("./utils/wrapAsync.js")
 const ExpressError=require("./utils/ExpressError.js")
-const {listingSchema}=require("./schema.js");
+const {listingSchema, reviewSchema}=require("./schema.js");
 const Review= require("./models/review.js");
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -33,15 +33,16 @@ app.use(express.static(path.join(__dirname,"/public")));
 
 
 app.use((req, res, next) => {
-  console.log("📦 Request body:", req.body);
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.log("📦 Incoming body:", req.body);
+  } else {
+    console.log("📦 No body content in request.");
+  }
   next();
 });
 
-app.use((req, res, next) => {
-  console.log("🟡 Incoming body:", req.body);
-  next();
-});
 
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 
 app.get("/", (req, res) => {
@@ -49,17 +50,30 @@ app.get("/", (req, res) => {
 });
 
 
+const validateListing = (req, res, next) => {
+  let { error } = listingSchema.validate(req.body);
 
-const validateListing=(req,res,next)=>{
-let {error} = listingSchema.validate(req.body);
-  
-  if(error){
-    let errMsg=error.details.map((el)=>el.message).join(".");
-throw new ExpressError(400,errMsg);
-  }else{
+  if (error) {
+    let errMsg = error.details.map((el) => el.message).join(".");
+    console.log("Validation failed:", errMsg);  // For debugging purposes
+    throw new ExpressError(400, errMsg); 
+  } else {
     next();
   }
-}
+};
+
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
+
+  if (error) {
+    let errMsg = error.details.map((el) => el.message).join(".");
+    console.log("Validation failed:", errMsg);  // For debugging purposes
+    throw new ExpressError(400, errMsg); 
+  } else {
+    next();
+  }
+};
+
 
 
 //Index Route
@@ -144,31 +158,15 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 //reviews
 //post route
 
-app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
+app.post("/listings/:id/reviews",validateReview, wrapAsync(async (req, res) => {
 
-  console.log("🔥 Review form submitted!", req.body);
-  const { id } = req.params;
-  const listing = await Listing.findById(id);
+  let listing = await Listing.findById(req.params.id);
+  let newReview=new Review(req.body.review);
 
-  if (!listing) {
-    throw new ExpressError(404, "Listing not found");
-  }
-
-  // Basic validation check
-  const { rating, comment } = req.body.review || {};
-
-  if (!rating || !comment) {
-    throw new ExpressError(400, "Review must have both rating and comment.");
-  }
-
-  const newReview = new Review({ rating, comment });
+  listing.reviews.push(newReview);
   await newReview.save();
-
-  // 💡 Push only ObjectId into reviews array
-  listing.reviews.push(newReview._id);
   await listing.save();
 
-  console.log("✅ New review saved:", newReview);
   res.redirect(`/listings/${listing._id}`);
 }));
 

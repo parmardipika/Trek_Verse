@@ -32,6 +32,6 @@ const listingSchema=new Schema({
         ref:"Review",
       }
     ]
-})
+});
 const Listing=mongoose.model("Listing",listingSchema);//model created named Listing.
 module.exports=Listing;
